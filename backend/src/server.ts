@@ -1,4 +1,4 @@
-/*import app from "./app";
+import app from './app';
 //import db from "ms-commons/data/db";
 
 (async () => {
@@ -6,7 +6,7 @@
     const port = parseInt(`${process.env.PORT}`);
 
     /*await db.sync();
-    console.log(`Running database name: ${process.env.DB_NAME}`);
+    console.log(`Running database name: ${process.env.DB_NAME}`);*/
 
     app.listen(port);
 
@@ -15,4 +15,3 @@
     console.log(error);
   }
 })();
-*/
