@@ -1,6 +1,7 @@
 export interface IMovie {
-  id: string;
+  id: number;
   titulo: string;
-  ano: Date;
+  ano: string;
   nota: number;
+  idapi: string;
 }

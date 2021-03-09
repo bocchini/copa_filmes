@@ -1,14 +1,14 @@
 import express from 'express';
-//import bodyParser from 'body-parser';
 import helmet from 'helmet';
+
 import moviesRouter from './routes/movies.router';
+import votationRouter from './routes/votation.router';
 
 const app = express();
 app.use(helmet());
 app.use(express.json());
 
-const port = parseInt(`${process.env.PORT}`);
-app.listen(port);
 app.use(moviesRouter);
+app.use(votationRouter);
 
-console.log(`Running on port ${port}`);
+export default app;
