@@ -4,6 +4,7 @@ import movieModel from '../models/movieModel';
 import { IMovie } from '../models/movie';
 
 let movies: IMovie[] = [];
+let winnersVotations = [];
 
 function Votation() {
   let votation = [...movies];
@@ -75,6 +76,7 @@ async function addVotation(req: Request, res: Response, next: any) {
     movies = [...listMovies];
 
     const winners = Votation();
+    winnersVotations.push(winners);
 
     res.status(201).json(winners);
   } catch (error) {
@@ -83,7 +85,13 @@ async function addVotation(req: Request, res: Response, next: any) {
 }
 
 function getVotation(req: Request, res: Response, next: any) {
-  return res.json();
+  if(!winnersVotations)
+  {
+
+      res.status(400).json('Please enter in area the votation');
+    }
+  }
+  return res.json(winnersVotations);
 }
 
-export default { getVotation, addVotation };
+export default { getVotation, addVotation, getVotation };
