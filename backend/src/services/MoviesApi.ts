@@ -16,7 +16,7 @@ async function getMoviesFromApi() {
     const moviesApi: IMovie[] = dataJson.data;
     for (let index = 0; index < moviesApi.length; index++) {
       const existMovie = await repositoy.findByIdApi(moviesApi[index].id);
-      console.log(existMovie);
+
       if (!existMovie) {
         await repositoy.addMovie({
           idapi: moviesApi[index].id,

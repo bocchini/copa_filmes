@@ -1,6 +1,6 @@
 # copa_filmes
 
-Uma sistema de simulaão de votação de filmes
+Uma sistema de simulação de votação de filmes
 
 ## Clone o repositorio
 
