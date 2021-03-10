@@ -4,13 +4,15 @@ import db from '../db';
 
 import { IVotation } from './votation';
 
+import { MovieModel } from './movieModel';
+
 interface MovieCreationAttributes extends Optional<IVotation, 'id'> {}
 
 export interface VotationModel
   extends Model<IVotation, MovieCreationAttributes>,
     IVotation {}
 
-const movieModel = db.define<VotationModel>('votation', {
+export const votationModel = db.define<VotationModel>('votation', {
   id: {
     type: Sequelize.INTEGER.UNSIGNED,
     primaryKey: true,
@@ -24,15 +26,15 @@ const movieModel = db.define<VotationModel>('votation', {
 });
 
 function findAll() {
-  return movieModel.findAll<VotationModel>();
+  return votationModel.findAll<VotationModel>();
 }
 
 function findById(id: number) {
-  return movieModel.findByPk<VotationModel>(id);
+  return votationModel.findByPk<VotationModel>(id);
 }
 
 function addVotation(votation: IVotation) {
-  movieModel.create(votation);
+  votationModel.create(votation);
 }
 
 export default { findAll, findById, addVotation };
