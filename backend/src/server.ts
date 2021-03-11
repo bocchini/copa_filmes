@@ -7,9 +7,11 @@ import getDataApi from './services/MoviesApi';
   try {
     const port = parseInt(`${process.env.PORT}`);
 
-    await db.sync();
+    const resultDb = await db.sync();
     console.log(`Running database name: ${process.env.DB_NAME}`);
+    //console.log(resultDb);
 
+    console.log('Consulting API Waiting');
     await getDataApi();
 
     app.listen(port);

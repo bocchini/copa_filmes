@@ -19,7 +19,7 @@ export const BoxVotation = styled.div`
   max-width: 1100px;
   text-align: center;
   color: #020202;
-  font-size: 1.1em;
+  font-size: 1em;
 `;
 
 export const BoxForm = styled.div`
@@ -27,11 +27,17 @@ export const BoxForm = styled.div`
 
   button {
     background-color: #343434;
+
     border: none;
     color: #f4ede8;
     float: right;
+    cursor: pointer;
 
     transition: background-color 0.2s;
+    :disabled {
+      background-color: #a6a6a6;
+      color: #a6a6a6;
+    }
 
     &:hover {
       background: ${shade(0.2, '#6e6e6e')};
@@ -40,8 +46,8 @@ export const BoxForm = styled.div`
 `;
 
 export const BoxMovie = styled.div`
-  padding: 5px 25px 5px 20px;
-  min-width: 25px;
-  max-width: 350px;
+  padding: 5px 25px 5px 25px;
+  width: 200px;
+  height: 100px;
   background-color: #ffffff;
 `;

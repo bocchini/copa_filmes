@@ -1,6 +1,7 @@
 import React from 'react';
+import { Link, withRouter } from 'react-router-dom';
 
-import { Container, Row, Col } from 'react-bootstrap';
+import { Container, Row, Col, Alert } from 'react-bootstrap';
 
 import {
   BoxContext,
@@ -11,11 +12,41 @@ import {
 } from './styles';
 
 class VotationMovie extends React.Component {
+  state = {
+    second: [],
+    error: '',
+    winner: [],
+  };
+
+  componentDidMount() {
+    this.loadMovies();
+  }
+
+  loadMovies = () => {
+    try {
+      const movies = this.props.location.state.movies;
+
+      this.setState({ winner: movies[0] });
+      this.setState({ second: movies[1] });
+    } catch (error) {
+      console.log(error);
+      this.setState({
+        error:
+          'Erro com os resultados dos filmes por favor voltepágina de votação e tente novamente',
+      });
+    }
+  };
+
   handleVote = async (event) => {
     event.preventDefault();
   };
 
+  renderError() {
+    return <Alert variant="danger">{this.state.error}</Alert>;
+  }
+
   render() {
+    const { winner, second } = this.state;
     return (
       <Container>
         <Layout>
@@ -31,12 +62,13 @@ class VotationMovie extends React.Component {
                 </p>
               </BoxContext>
               <BoxVotation>
+                {this.state.error && this.renderError()}
                 <div className="row">
                   <div className="p-2 flex-shrink-1 bd-highlight">
                     <BoxMovie>1º</BoxMovie>
                   </div>
                   <div className="p-2 flex-grow-1 bd-highlight">
-                    <BoxMovieResult>Filme Campeão</BoxMovieResult>
+                    <BoxMovieResult>{winner.titulo}</BoxMovieResult>
                   </div>
                 </div>
               </BoxVotation>
@@ -46,16 +78,23 @@ class VotationMovie extends React.Component {
                     <BoxMovie>2º</BoxMovie>
                   </div>
                   <div className="p-2 flex-grow-1 bd-highlight">
-                    <BoxMovieResult>Vice Campeão</BoxMovieResult>
+                    <BoxMovieResult>{second.titulo}</BoxMovieResult>
                   </div>
                 </div>
               </BoxVotation>
             </Col>
           </Row>
+          <Col>
+            <Row>
+              <Link className="button" to="/">
+                Voltar para votação
+              </Link>
+            </Row>
+          </Col>
         </Layout>
       </Container>
     );
   }
 }
 
-export default VotationMovie;
+export default withRouter(VotationMovie);
