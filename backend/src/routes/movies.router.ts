@@ -9,6 +9,6 @@ import MovieController from '../controllers/MoviesController';
 const router = Router();
 
 router.get('/', MovieController.getAllMovies);
-router.get('/:id', validateId, MovieController.getById);
+//router.get('/:id', validateId, MovieController.getById);
 
 export default router;

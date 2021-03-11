@@ -3,6 +3,12 @@ import request from 'supertest';
 
 import app from '../src/app';
 
+import db from '../src/db';
+
+beforeAll(async () => {
+  await db.sync();
+});
+
 describe('Return all movies', () => {
   it('Get / - Return all movies from API', async () => {
     const result = await request(app).get('/').send();
@@ -16,12 +22,20 @@ describe('Return all movies', () => {
       id: ['8', '9', '6', '4', '12', '14', '15', '16'],
     };
     const result = await request(app).post('/votation').send(payload);
-    expect(result.status).toEqual(404);
+    expect(result.status).toEqual(400);
+  });
+
+  it('Post / - Post votation movies id number out bd', async () => {
+    const payload = {
+      id: [8, 9, 6, 4, 12, 125, 2, 1],
+    };
+    const result = await request(app).post('/votation').send(payload);
+    expect(result.status).toEqual(400);
   });
 
   it('Post / - Post votation movies using 6 ids movies', async () => {
     const payload = {
-      id: ['2', '1', '9', '4', '6', '5'],
+      id: [2, 1, 9, 4, 6, 5],
     };
     const result = await request(app).post('/votation').send(payload);
     expect(result.status).toEqual(400);
@@ -30,6 +44,6 @@ describe('Return all movies', () => {
   it('Post / - Post votation without id ', async () => {
     const payload = { asd: [] };
     const result = await request(app).post('/votation').send(payload);
-    expect(result.status).toEqual(422);
+    expect(result.status).toEqual(404);
   });
 });

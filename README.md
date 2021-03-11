@@ -28,6 +28,10 @@ git clone https://github.com/bocchini/copa-filmes
 
 ### Configurações
 
+- Frontend
+
+  - Configurar dentro da pasta src/services o arquivo api.js a baseUrl onde está ordando o serviço de backend com o mesmo valor da env
+
 - Backend
 
   - Renomear .env.copy para .env e configurar as variáveis de ambiente.

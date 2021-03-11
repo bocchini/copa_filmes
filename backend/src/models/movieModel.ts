@@ -12,7 +12,7 @@ export interface MovieModel
 
 const movieModel = db.define<MovieModel>('movie', {
   id: {
-    type: Sequelize.INTEGER.UNSIGNED,
+    type: Sequelize.INTEGER,
     primaryKey: true,
     autoIncrement: true,
     allowNull: false,
