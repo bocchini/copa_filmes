@@ -7,7 +7,6 @@
   "scripts": {
     "start": "ts-node -r dotenv/config -r tsconfig-paths/register ./dist/accounts-service/src/server",
     "compile": "tsc && ts-node -r dotenv/config -r tsconfig-paths/register ./dist/accounts-service/src/server",
-    "dev:luiz": "nodemon -e ts,json --ignore dist --exec \"yarn run compile\"",
     "dev": "ts-node-dev --inspect -r dotenv/config --transpile-only --ignore-watch node_modules src/server.ts",
     "test": "jest"
   },
