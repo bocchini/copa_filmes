@@ -1,15 +1,97 @@
 import React from 'react';
 
-import { Button, Form, Container, Row, Col } from 'react-bootstrap';
+import { useHistory, withRouter } from 'react-router-dom';
+
+import { Button, Form, Container, Row, Col, Alert } from 'react-bootstrap';
+import api from '../../services/api';
 
 import { BoxContext, BoxForm, BoxVotation, BoxMovie, Layout } from './styles';
 
 class SelectMovies extends React.Component {
+  state = {
+    error: '',
+    ids: [],
+    isLoading: false,
+    amount: 0,
+    movies: [],
+    btnDisable: true,
+  };
+
+  componentDidMount() {
+    this.loadMovies();
+  }
+
+  loadMovies = async () => {
+    try {
+      const response = await api.get('');
+      this.setState({ movies: response.data });
+    } catch {
+      this.setState({ error: 'Erro ao acessar o servidor' });
+    }
+  };
+
   handleVote = async (event) => {
     event.preventDefault();
+    this.setState({ error: '' });
+    const { ids } = this.state;
+
+    if (ids.length === 8) {
+      try {
+        const idsToSend = { id: ids };
+        const response = await api.post('votation', idsToSend);
+        this.props.history.push({
+          pathname: '/votation',
+          state: { movies: response.data },
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      this.setState({ error: 'Você precisa escolher 8 filmes' });
+    }
+  };
+
+  renderError() {
+    return <Alert variant="danger">{this.state.error}</Alert>;
+  }
+
+  onMovieChange = (event) => {
+    const target = event.target;
+    this.setState({ error: '' });
+
+    let value = target.value;
+
+    let valuesAmont = this.state.amount;
+    let idMovies = this.state.ids;
+    let btn = this.state.btnDisable;
+
+    if (target.checked) {
+      idMovies.push(value);
+      valuesAmont += 1;
+    } else {
+      const index = idMovies.findIndex((movie) => movie === value);
+      idMovies.splice(index, 1);
+      valuesAmont -= 1;
+    }
+
+    if (valuesAmont > 8) {
+      this.setState({ error: 'Você precisa escolher somente 8 filmes' });
+      btn = true;
+    } else if (valuesAmont <= 8) {
+      this.setState({ error: '' });
+      btn = true;
+    }
+
+    if (idMovies.length === 8) {
+      btn = false;
+    }
+    this.setState({ btnDisable: btn });
+    this.setState({ amount: valuesAmont });
+    this.setState({ ids: idMovies });
   };
 
   render() {
+    const { amount, movies, btnDisable } = this.state;
     return (
       <Container>
         <Layout>
@@ -27,185 +109,42 @@ class SelectMovies extends React.Component {
 
               <BoxForm>
                 <Form onSubmit={this.handleVote}>
+                  {this.state.error && this.renderError()}
                   <Row>
-                    <Col>Selecionados 0 de 8 filmes</Col>
+                    <Col>Selecionados {amount} de 8 filmes</Col>
 
                     <Col>
-                      <Button type="submit">Gerar meu campeonato</Button>
+                      <Button type="submit" disabled={btnDisable}>
+                        Gerar meu campeonato
+                      </Button>
                     </Col>
                   </Row>
 
                   <Row className="justify-content-md-center">
-                    <BoxVotation>
-                      <Col>
-                        <BoxMovie>
-                          <div class="form-check">
-                            <input
-                              class="form-check-input"
-                              type="checkbox"
-                              value="1"
-                              id="flexCheckDefault"
-                            />
-                            <label
-                              class="form-check-label"
-                              for="flexCheckDefault"
-                            >
-                              <p>Titulo do Filme</p>
-                              <p>2008</p>
-                            </label>
-                          </div>
-                        </BoxMovie>
-                      </Col>
-                    </BoxVotation>
-                    <BoxVotation>
-                      <Col>
-                        <BoxMovie>
-                          <div class="form-check">
-                            <input
-                              class="form-check-input"
-                              type="checkbox"
-                              value="2"
-                              id="flexCheckDefault"
-                            />
-                            <label
-                              class="form-check-label"
-                              for="flexCheckDefault"
-                            >
-                              <p>Titulo do Filme 1</p>
-                              <p>2018</p>
-                            </label>
-                          </div>
-                        </BoxMovie>
-                      </Col>
-                    </BoxVotation>
-                    <BoxVotation>
-                      <Col>
-                        <BoxMovie>
-                          <div class="form-check">
-                            <input
-                              class="form-check-input"
-                              type="checkbox"
-                              value="3"
-                              id="flexCheckDefault"
-                            />
-                            <label
-                              class="form-check-label"
-                              for="flexCheckDefault"
-                            >
-                              <p>Titulo do Filme 3</p>
-                              <p>2048</p>
-                            </label>
-                          </div>
-                        </BoxMovie>
-                      </Col>
-                    </BoxVotation>
-                    <BoxVotation>
-                      <Col>
-                        <BoxMovie>
-                          <div class="form-check">
-                            <input
-                              class="form-check-input"
-                              type="checkbox"
-                              value="4"
-                              id="flexCheckDefault"
-                            />
-                            <label
-                              class="form-check-label"
-                              for="flexCheckDefault"
-                            >
-                              <p>Titulo do Filme 4</p>
-                              <p>2048</p>
-                            </label>
-                          </div>
-                        </BoxMovie>
-                      </Col>
-                    </BoxVotation>
-                  </Row>
-                  <Row className="justify-content-md-center">
-                    <BoxVotation>
-                      <Col>
-                        <BoxMovie>
-                          <div class="form-check">
-                            <input
-                              class="form-check-input"
-                              type="checkbox"
-                              value="1"
-                              id="flexCheckDefault"
-                            />
-                            <label
-                              class="form-check-label"
-                              for="flexCheckDefault"
-                            >
-                              <p>Titulo do Filme</p>
-                              <p>2008</p>
-                            </label>
-                          </div>
-                        </BoxMovie>
-                      </Col>
-                    </BoxVotation>
-                    <BoxVotation>
-                      <Col>
-                        <BoxMovie>
-                          <div class="form-check">
-                            <input
-                              class="form-check-input"
-                              type="checkbox"
-                              value="2"
-                              id="flexCheckDefault"
-                            />
-                            <label
-                              class="form-check-label"
-                              for="flexCheckDefault"
-                            >
-                              <p>Titulo do Filme 1</p>
-                              <p>2018</p>
-                            </label>
-                          </div>
-                        </BoxMovie>
-                      </Col>
-                    </BoxVotation>
-                    <BoxVotation>
-                      <Col>
-                        <BoxMovie>
-                          <div class="form-check">
-                            <input
-                              class="form-check-input"
-                              type="checkbox"
-                              value="3"
-                              id="flexCheckDefault"
-                            />
-                            <label
-                              class="form-check-label"
-                              for="flexCheckDefault"
-                            >
-                              <p>Titulo do Filme 3</p>
-                              <p>2048</p>
-                            </label>
-                          </div>
-                        </BoxMovie>
-                      </Col>
-                    </BoxVotation>
-                    <BoxVotation>
-                      <Col>
-                        <BoxMovie>
-                          <div class="form-check">
-                            <input
-                              class="form-check-input"
-                              type="checkbox"
-                              value="4"
-                              id="flexCheckDefault"
-                            />
-                            <label
-                              class="form-check-label"
-                              for="flexCheckDefault"
-                            >
-                              <p>Titulo do Filme 4</p>
-                              <p>2048</p>
-                            </label>
-                          </div>
-                        </BoxMovie>
-                      </Col>
-                    </BoxVotation>
+                    {movies.map((movie) => (
+                      <BoxVotation>
+                        <Col>
+                          <BoxMovie>
+                            <div class="form-check" key={movie.id}>
+                              <input
+                                class="form-check-input"
+                                type="checkbox"
+                                value={movie.id}
+                                id={movie.id}
+                                onChange={this.onMovieChange}
+                              />
+                              <label
+                                class="form-check-label"
+                                for="flexCheckDefault"
+                              >
+                                <p>{movie.titulo}</p>
+                                <p>{movie.ano}</p>
+                              </label>
+                            </div>
+                          </BoxMovie>
+                        </Col>
+                      </BoxVotation>
+                    ))}
                   </Row>
                 </Form>
               </BoxForm>
@@ -217,4 +156,4 @@ class SelectMovies extends React.Component {
   }
 }
 
-export default SelectMovies;
+export default withRouter(SelectMovies);

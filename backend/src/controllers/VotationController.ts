@@ -85,11 +85,8 @@ async function addVotation(req: Request, res: Response, next: any) {
 }
 
 function getVotation(req: Request, res: Response, next: any) {
-  if(!winnersVotations)
-  {
-
-      res.status(400).json('Please enter in area the votation');
-    }
+  if (!winnersVotations) {
+    res.status(400).json('Please enter in area the votation');
   }
   return res.json(winnersVotations);
 }
