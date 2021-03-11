@@ -28,11 +28,6 @@ git clone https://github.com/bocchini/copa-filmes
 
 ### Configurações
 
-- Frontend
-
-  - Desenvolvimento: editar .env.development e configurar as variáveis de ambiente.
-  - Produção: criar uma cópia env.development e renomear para .env.production e configurar as variáveis do seu ambiente.
-
 - Backend
 
   - Renomear .env.copy para .env e configurar as variáveis de ambiente.

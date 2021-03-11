@@ -13,39 +13,23 @@ describe('Return all movies', () => {
 
   it('Post / - Post votation movies post wrong', async () => {
     const payload = {
-      id: [
-        'tat3799232',
-        'tt5463162',
-        'tt3778644',
-        'tt7784604',
-        'tt5834262',
-        'tt4881806',
-        'tt5164214',
-        'tt0317705',
-      ],
+      id: ['8', '9', '6', '4', '12', '14', '15', '16'],
     };
-    const result = await request(app).post('/').send(payload);
+    const result = await request(app).post('/votation').send(payload);
     expect(result.status).toEqual(404);
   });
 
   it('Post / - Post votation movies using 6 ids movies', async () => {
     const payload = {
-      id: [
-        'tt3799232',
-        'tt5463162',
-        'tt3778644',
-        'tt7784604',
-        'tt5834262',
-        'tt4881806',
-      ],
+      id: ['2', '1', '9', '4', '6', '5'],
     };
-    const result = await request(app).post('/').send(payload);
+    const result = await request(app).post('/votation').send(payload);
     expect(result.status).toEqual(400);
   });
 
   it('Post / - Post votation without id ', async () => {
     const payload = { asd: [] };
-    const result = await request(app).post('/').send(payload);
+    const result = await request(app).post('/votation').send(payload);
     expect(result.status).toEqual(422);
   });
 });
