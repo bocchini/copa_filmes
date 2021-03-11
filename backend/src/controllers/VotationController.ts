@@ -72,7 +72,7 @@ async function addVotation(req: Request, res: Response, next: any) {
         .json({ Error: 'Number the movies to votation have 8' });
     }
 
-    const listMovies = await Promise.all(
+    const listMovies: any | IMovie = await Promise.all(
       idsMovies.map(async (vote) => {
         const movieVote = (await movieModel.findById(parseInt(vote))) as IMovie;
 
