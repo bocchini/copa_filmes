@@ -2,13 +2,22 @@ import { Request, Response } from 'express';
 
 import movieModel from '../models/movieModel';
 import { IMovie } from '../models/movie';
+interface IVotation {
+  id?: number;
+  titulo: string;
+  ano: string;
+  nota: number;
+  idapi?: string;
+}
+interface IIds {
+  id: string[];
+}
 
 let movies: IMovie[] = [];
-let winnersVotations = [];
 
-function Votation() {
+function Votation(): IVotation[] {
   let votation = [...movies];
-  let firstVotation = [];
+  let firstVotation: IVotation[] = [];
   for (let index = 0; index < votation.length; index++) {
     const last = votation.pop();
     const first = votation[index];
@@ -16,7 +25,7 @@ function Votation() {
     firstVotation.push(investigateVotation(first, last));
   }
 
-  const secondVotation = [];
+  const secondVotation: IVotation[] = [];
   secondVotation.push(investigateVotation(firstVotation[0], firstVotation[1]));
   secondVotation.push(investigateVotation(firstVotation[2], firstVotation[3]));
 
@@ -26,12 +35,12 @@ function Votation() {
     (secondPlace) => result.id != secondPlace.id,
   );
 
-  const results = [result, secondVotation[idSecond]];
+  const results: IVotation[] = [result, secondVotation[idSecond]];
   return results;
 }
 
-function investigateVotation(first, second) {
-  let winner;
+function investigateVotation(first: IVotation, second: IVotation): IVotation {
+  let winner: any;
   if (first.nota > second.nota) {
     winner = first;
   } else if (first.nota < second.nota) {
@@ -44,7 +53,7 @@ function investigateVotation(first, second) {
 
 async function addVotation(req: Request, res: Response, next: any) {
   try {
-    const newVotation = req.body;
+    const newVotation = req.body as IIds;
 
     if (newVotation.id === undefined) {
       return res
@@ -65,18 +74,18 @@ async function addVotation(req: Request, res: Response, next: any) {
 
     const listMovies = await Promise.all(
       idsMovies.map(async (vote) => {
-        const movieVote = await movieModel.findById(parseInt(vote));
+        const movieVote = (await movieModel.findById(parseInt(vote))) as IMovie;
 
         if (!movieVote) {
           return res.status(400).json({ Error: 'One or more movies no exist' });
         }
-        return movieVote;
+        return movieVote as IVotation;
       }),
     );
+
     movies = [...listMovies];
 
     const winners = Votation();
-    winnersVotations.push(winners);
 
     res.status(201).json(winners);
   } catch (error) {
@@ -84,11 +93,6 @@ async function addVotation(req: Request, res: Response, next: any) {
   }
 }
 
-function getVotation(req: Request, res: Response, next: any) {
-  if (!winnersVotations) {
-    res.status(400).json('Please enter in area the votation');
-  }
-  return res.json(winnersVotations);
-}
+function getVotation(req: Request, res: Response, next: any) {}
 
-export default { getVotation, addVotation, getVotation };
+export default { addVotation };

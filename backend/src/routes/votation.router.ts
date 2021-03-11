@@ -8,6 +8,6 @@ const router = Router();
 
 router.post('/votation', VotationController.addVotation);
 
-router.get('/votation', validateVotation, VotationController.getVotation);
+//router.get('/votation', validateVotation, VotationController.getVotation);
 
 export default router;
